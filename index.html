@@ -74,11 +74,21 @@
 
   .ocr-result{margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;border:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.5;white-space:pre-wrap;max-height:160px;overflow:auto;}
 
-  table{width:100%;border-collapse:collapse;font-size:0.82rem;}
-  th{text-align:left;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;font-size:0.68rem;border-bottom:1px solid var(--line);padding:6px 8px;}
-  td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;}
-  td.ocr-cell{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft);}
-  td a{color:var(--steel-dark);}
+  .log-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .log-card{background:var(--bg);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .log-thumb{
+    display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--line);
+  }
+  .log-thumb-fallback{
+    display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/3;
+    background:var(--line);color:var(--ink-soft);font-size:0.72rem;text-align:center;padding:8px;
+  }
+  .log-meta{padding:8px 10px 10px;}
+  .log-time{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--ink-soft);margin-bottom:4px;}
+  .log-ocr{
+    font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--ink);line-height:1.4;
+    max-height:3.9em;overflow:hidden;
+  }
 
   .modal-backdrop{position:fixed;inset:0;background:rgba(28,43,51,0.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:10;}
   .modal-backdrop.open{display:flex;}
@@ -171,7 +181,7 @@
 // Paste your Apps Script Web App URL (ends in /exec) below, inside the quotes.
 // Once this is set, the page never needs the Settings popup — it works for
 // anyone who opens the hosted page, on any device.
-var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqxdiidcET8JMJWPmKmzp6almtVbKUhLhYLOAXU4rI0qish7oIrqcsn6/exec';
+var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxskJ14r15QXpTU2HE6i2SwePgxg35sn4lBc1-zyfQUkG89PGGcveov7bV5pgXlaBU5/exec';
 // =============================================
 
 (function(){
@@ -570,6 +580,16 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     });
   };
 
+  function driveFileId(link){
+    if(!link) return null;
+    var m = String(link).match(/\/d\/([a-zA-Z0-9_-]+)/);
+    return m ? m[1] : null;
+  }
+  function thumbUrl(link){
+    var id = driveFileId(link);
+    return id ? ('https://drive.google.com/thumbnail?id=' + id + '&sz=w400') : null;
+  }
+
   function refreshLog(){
     var area = document.getElementById('logArea');
     if(!webAppUrl){ area.innerHTML = '<div class="empty-hint">Set your Apps Script Web App URL in Settings to see the log.</div>'; return; }
@@ -582,15 +602,28 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
           return r.docType===state.docType && r.year===state.year && r.month===state.month && r.date===state.date;
         });
         if(!rows.length){ area.innerHTML = '<div class="empty-hint">No captures logged yet in this folder.</div>'; return; }
-        var html = '<table><thead><tr><th>Time</th><th>File</th><th>OCR</th></tr></thead><tbody>';
+        var grid = document.createElement('div');
+        grid.className = 'log-grid';
         rows.forEach(function(r){
           var t = r.timestamp ? new Date(r.timestamp).toLocaleString() : '';
-          html += '<tr><td>' + t + '</td>' +
-                  '<td><a href="' + esc(r.link) + '" target="_blank" rel="noopener">' + esc(r.fileName) + '</a></td>' +
-                  '<td class="ocr-cell" title="' + esc(r.ocrText) + '">' + esc(r.ocrText) + '</td></tr>';
+          var thumb = thumbUrl(r.link);
+          var card = document.createElement('a');
+          card.className = 'log-card';
+          card.href = r.link || '#';
+          card.target = '_blank';
+          card.rel = 'noopener';
+          card.style.display = 'block';
+          card.style.textDecoration = 'none';
+          card.style.color = 'inherit';
+          var imgHtml = thumb
+            ? '<img class="log-thumb" src="'+esc(thumb)+'" alt="'+esc(r.fileName)+'" loading="lazy" onerror="this.outerHTML=\'<div class=&quot;log-thumb-fallback&quot;>Photo unavailable</div>\'">'
+            : '<div class="log-thumb-fallback">No preview</div>';
+          card.innerHTML = imgHtml +
+            '<div class="log-meta"><div class="log-time">'+esc(t)+'</div><div class="log-ocr">'+esc(r.ocrText || '(no text)')+'</div></div>';
+          grid.appendChild(card);
         });
-        html += '</tbody></table>';
-        area.innerHTML = html;
+        area.innerHTML = '';
+        area.appendChild(grid);
       })
       .catch(function(err){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + esc(err.message) + '</div>'; });
   }
