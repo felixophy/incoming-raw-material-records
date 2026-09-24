@@ -137,10 +137,16 @@
         <div class="btn-row">
           <button class="btn btn-secondary" id="retakeBtn" style="display:none;">Retake</button>
           <button class="btn btn-primary" id="captureBtn">Take photo</button>
-          <button class="btn btn-primary" id="uploadBtn" style="display:none;">Upload &amp; run OCR</button>
+          <button class="btn btn-primary" id="ocrBtn" style="display:none;">Run OCR</button>
         </div>
         <div class="status" id="statusMsg"></div>
-        <div class="ocr-result" id="ocrResult" style="display:none;"></div>
+        <div id="ocrReview" style="display:none;width:100%;max-width:420px;">
+          <label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-soft);display:block;margin:4px 0 6px;">Recognized text — edit if needed</label>
+          <textarea id="ocrTextArea" class="ocr-result" style="display:block;width:100%;min-height:120px;resize:vertical;border:1px solid var(--line);"></textarea>
+          <div class="btn-row" style="margin-top:10px;">
+            <button class="btn btn-primary" id="saveBtn">Save</button>
+          </div>
+        </div>
       </div>
     </section>
     <section class="panel">
@@ -181,7 +187,7 @@
 // Paste your Apps Script Web App URL (ends in /exec) below, inside the quotes.
 // Once this is set, the page never needs the Settings popup — it works for
 // anyone who opens the hosted page, on any device.
-var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzo0O7Z4hq-Gf3IgtI4HKStof9Zw2954Pkqk5XVsaGyetc03Ezs4U9DR3dN1pA6xqBk/exec';
+var DEFAULT_WEBAPP_URL = '';
 // =============================================
 
 (function(){
@@ -510,8 +516,10 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzo0O7Z4hq-Gf3
   var previewPlaceholder = document.getElementById('previewPlaceholder');
   var captureBtn = document.getElementById('captureBtn');
   var retakeBtn = document.getElementById('retakeBtn');
-  var uploadBtn = document.getElementById('uploadBtn');
-  var ocrResult = document.getElementById('ocrResult');
+  var ocrBtn = document.getElementById('ocrBtn');
+  var saveBtn = document.getElementById('saveBtn');
+  var ocrReview = document.getElementById('ocrReview');
+  var ocrTextArea = document.getElementById('ocrTextArea');
 
   function openCaptureScreen(){
     resetCapture();
@@ -524,10 +532,10 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzo0O7Z4hq-Gf3
     previewPlaceholder.style.display='block';
     captureBtn.style.display='inline-block';
     retakeBtn.style.display='none';
-    uploadBtn.style.display='none';
+    ocrBtn.style.display='none';
+    ocrReview.style.display='none';
     fileInput.value='';
     if(!keepResult){
-      ocrResult.style.display='none';
       setStatus('', '');
     }
   }
@@ -545,8 +553,8 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzo0O7Z4hq-Gf3
       previewPlaceholder.style.display='none';
       captureBtn.style.display='none';
       retakeBtn.style.display='inline-block';
-      uploadBtn.style.display='inline-block';
-      ocrResult.style.display='none';
+      ocrBtn.style.display='inline-block';
+      ocrReview.style.display='none';
       setStatus('', '');
     };
     reader.readAsDataURL(file);
@@ -559,22 +567,36 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzo0O7Z4hq-Gf3
     el.className = 'status' + (kind ? ' ' + kind : '');
   }
 
-  uploadBtn.onclick = function(){
+  ocrBtn.onclick = function(){
     if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings first.', 'error'); return; }
     if(!state.imageBlobBase64){ setStatus('Take a photo first.', 'error'); return; }
-    uploadBtn.disabled = true;
-    setStatus('Uploading and running OCR — this can take a few seconds…', 'busy');
+    ocrBtn.disabled = true;
+    setStatus('Running OCR — this can take a few seconds…', 'busy');
+    postAction('ocrPreview', { mimeType: state.imageMime, imageBase64: state.imageBlobBase64 }).then(function(res){
+      ocrBtn.disabled = false;
+      if(!res.ok){ setStatus('Error: ' + res.error, 'error'); return; }
+      setStatus('Review the text below, then Save.', '');
+      ocrTextArea.value = res.ocrText || '';
+      ocrReview.style.display = 'block';
+      ocrBtn.style.display = 'none';
+    });
+  };
+
+  saveBtn.onclick = function(){
+    if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings first.', 'error'); return; }
+    if(!state.imageBlobBase64){ setStatus('Take a photo first.', 'error'); return; }
+    saveBtn.disabled = true;
+    setStatus('Saving…', 'busy');
     var payload = {
       material: state.material, docType: state.docType, year: state.year, month: state.month, date: state.date,
       filename: state.material + '_' + state.docType + '_' + Date.now() + '.jpg',
-      mimeType: state.imageMime, imageBase64: state.imageBlobBase64
+      mimeType: state.imageMime, imageBase64: state.imageBlobBase64,
+      ocrText: ocrTextArea.value
     };
-    postAction('upload', payload).then(function(res){
-      uploadBtn.disabled = false;
+    postAction('save', payload).then(function(res){
+      saveBtn.disabled = false;
       if(!res.ok){ setStatus('Error: ' + res.error, 'error'); return; }
       setStatus('Saved and logged to the ' + state.material + ' sheet.', 'success');
-      ocrResult.style.display='block';
-      ocrResult.textContent = res.ocrText || '(no text recognized)';
       resetCapture(true);
       refreshLog();
     });
@@ -599,7 +621,8 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzo0O7Z4hq-Gf3
       .then(function(res){
         if(!res.ok){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + esc(res.error) + '</div>'; return; }
         var rows = (res.rows || []).filter(function(r){
-          return r.docType===state.docType && r.year===state.year && r.month===state.month && r.date===state.date;
+          return String(r.docType)===String(state.docType) && String(r.year)===String(state.year) &&
+                 String(r.month)===String(state.month) && String(r.date)===String(state.date);
         });
         if(!rows.length){ area.innerHTML = '<div class="empty-hint">No captures logged yet in this folder.</div>'; return; }
         var grid = document.createElement('div');
