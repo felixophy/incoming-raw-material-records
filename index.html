@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incoming Raw Material Records</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF1EF;
+    --surface:#FFFFFF;
+    --ink:#1C2B33;
+    --ink-soft:#5C6B73;
+    --steel:#35617D;
+    --steel-dark:#254A62;
+    --amber:#E2A33D;
+    --amber-dark:#C4841F;
+    --line:#D6DBD8;
+    --success:#3F7D58;
+    --error:#B3452C;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;}
+  header h1{font-size:1.35rem;font-weight:600;margin:0 0 4px;letter-spacing:-0.01em;}
+  header p{margin:0;color:var(--ink-soft);font-size:0.9rem;}
+  .gear{
+    border:1px solid var(--line);background:var(--surface);border-radius:6px;
+    padding:8px 12px;font-size:0.8rem;color:var(--steel-dark);cursor:pointer;
+    font-family:inherit;white-space:nowrap;
+  }
+  .gear:hover{border-color:var(--steel);}
+
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-top:3px solid var(--steel);
+    border-radius:4px;
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .panel h2{
+    font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--ink-soft);margin:0 0 12px;font-weight:600;
+    display:flex;align-items:center;gap:8px;
+  }
+  .step-num{
+    width:18px;height:18px;border-radius:50%;background:var(--steel);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:0.68rem;
+    font-family:'IBM Plex Mono',monospace;flex-shrink:0;
+  }
+  .step-num.done{background:var(--success);}
+
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--line);background:var(--bg);color:var(--ink);
+    padding:9px 16px;border-radius:4px;cursor:pointer;font-family:inherit;
+    font-size:0.9rem;font-weight:500;transition:border-color .15s, background .15s;
+  }
+  .chip:hover{border-color:var(--steel);}
+  .chip.active{background:var(--steel);border-color:var(--steel);color:#fff;}
+
+  .month-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .month-input{
+    border:1px solid var(--line);border-radius:4px;padding:9px 12px;
+    font-family:inherit;font-size:0.9rem;background:var(--bg);color:var(--ink);
+    min-width:160px;
+  }
+  .month-input:focus{outline:2px solid var(--steel);outline-offset:1px;}
+  .add-btn{
+    border:1px dashed var(--steel);background:transparent;color:var(--steel-dark);
+    padding:9px 14px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:0.85rem;
+  }
+  .add-btn:hover{background:#eaf0f4;}
+
+  .camera-area{display:flex;flex-direction:column;gap:12px;align-items:center;}
+  .preview{
+    width:100%;max-width:420px;aspect-ratio:4/3;border-radius:4px;
+    border:1px solid var(--line);background:var(--bg);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .preview img{width:100%;height:100%;object-fit:cover;}
+  .preview .placeholder{color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:0 20px;}
+  input[type=file]{display:none;}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+  .btn{
+    font-family:inherit;font-size:0.9rem;font-weight:600;border-radius:5px;
+    padding:11px 20px;cursor:pointer;border:none;
+  }
+  .btn-primary{background:var(--amber);color:#3A2A0A;}
+  .btn-primary:hover{background:var(--amber-dark);}
+  .btn-secondary{background:transparent;border:1px solid var(--line);color:var(--ink);}
+  .btn-secondary:hover{border-color:var(--steel);}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+  .status{font-size:0.85rem;margin-top:6px;min-height:1.2em;}
+  .status.error{color:var(--error);}
+  .status.success{color:var(--success);}
+  .status.busy{color:var(--steel-dark);}
+
+  .ocr-result{
+    margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;
+    border:1px solid var(--line);font-family:'IBM Plex Mono',monospace;
+    font-size:0.78rem;line-height:1.5;white-space:pre-wrap;max-height:160px;overflow:auto;
+  }
+
+  table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+  th{
+    text-align:left;color:var(--ink-soft);font-weight:600;text-transform:uppercase;
+    letter-spacing:0.04em;font-size:0.68rem;border-bottom:1px solid var(--line);
+    padding:6px 8px;
+  }
+  td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;}
+  td.ocr-cell{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft);}
+  td a{color:var(--steel-dark);}
+  .empty-log{color:var(--ink-soft);font-size:0.85rem;padding:8px 0;}
+
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(28,43,51,0.55);display:none;
+    align-items:center;justify-content:center;padding:20px;z-index:10;
+  }
+  .modal-backdrop.open{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:6px;padding:22px;max-width:420px;width:100%;
+  }
+  .modal h3{margin:0 0 10px;font-size:1rem;}
+  .modal p{color:var(--ink-soft);font-size:0.82rem;line-height:1.5;margin:0 0 14px;}
+  .modal input{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px;
+    font-family:'IBM Plex Mono',monospace;font-size:0.82rem;margin-bottom:14px;
+  }
+  .modal .btn-row{justify-content:flex-end;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Incoming Raw Material Records</h1>
+      <p>Photograph CoA and inspection documents — OCR text is logged straight to the spreadsheet.</p>
+    </div>
+    <button class="gear" id="settingsBtn">Settings</button>
+  </header>
+
+  <section class="panel">
+    <h2><span class="step-num" id="num1">1</span> Material</h2>
+    <div class="chip-row" id="materialRow">
+      <button class="chip" data-value="Oil">Oil</button>
+      <button class="chip" data-value="Film">Film</button>
+      <button class="chip" data-value="Seasoning">Seasoning</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="step-num" id="num2">2</span> Document type</h2>
+    <div class="chip-row" id="docTypeRow">
+      <button class="chip" data-value="CoA">CoA</button>
+      <button class="chip" data-value="Inspection">Inspection</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="step-num" id="num3">3</span> Month folder</h2>
+    <div class="month-row" id="monthRow">
+      <button class="add-btn" id="addMonthBtn">+ New month</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2><span class="step-num" id="num4">4</span> Capture &amp; upload</h2>
+    <div class="camera-area">
+      <label class="preview" id="previewLabel" for="fileInput">
+        <span class="placeholder" id="previewPlaceholder">Tap "Take photo" to capture a document</span>
+        <img id="previewImg" style="display:none;">
+      </label>
+      <input type="file" id="fileInput" accept="image/*" capture="environment">
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="retakeBtn" style="display:none;">Retake</button>
+        <button class="btn btn-primary" id="captureBtn">Take photo</button>
+        <button class="btn btn-primary" id="uploadBtn" style="display:none;">Upload &amp; run OCR</button>
+      </div>
+      <div class="status" id="statusMsg"></div>
+      <div class="ocr-result" id="ocrResult" style="display:none;"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Recent captures <span id="logMaterialLabel" style="text-transform:none;letter-spacing:0;"></span></h2>
+    <div id="logArea"><div class="empty-log">Select a material to see its log.</div></div>
+  </section>
+</div>
+
+<div class="modal-backdrop" id="settingsModal">
+  <div class="modal">
+    <h3>Apps Script Web App URL</h3>
+    <p>Paste the deployment URL from your Apps Script Web App (Deploy → New deployment → Web app). Saved only in this browser.</p>
+    <input type="text" id="webAppUrlInput" placeholder="https://script.google.com/macros/s/…/exec">
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="settingsCancel">Cancel</button>
+      <button class="btn btn-primary" id="settingsSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="monthModal">
+  <div class="modal">
+    <h3>Add month folder</h3>
+    <p>Name the new month subfolder, e.g. "August" or "August 2026".</p>
+    <input type="text" id="newMonthInput" placeholder="August">
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="monthCancel">Cancel</button>
+      <button class="btn btn-primary" id="monthSave">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var state = { material:null, docType:null, month:null, months:[], imageDataUrl:null, imageBlobBase64:null, imageMime:null };
+
+  function loadUrl(){ try{ return localStorage.getItem('irm_webapp_url') || ''; }catch(e){ return ''; } }
+  function saveUrl(v){ try{ localStorage.setItem('irm_webapp_url', v); }catch(e){} }
+  function loadMonths(){ try{ return JSON.parse(localStorage.getItem('irm_months')||'[]'); }catch(e){ return []; } }
+  function saveMonths(list){ try{ localStorage.setItem('irm_months', JSON.stringify(list)); }catch(e){} }
+
+  var webAppUrl = loadUrl();
+  state.months = loadMonths();
+
+  // ---- Settings modal ----
+  var settingsModal = document.getElementById('settingsModal');
+  document.getElementById('settingsBtn').onclick = function(){
+    document.getElementById('webAppUrlInput').value = webAppUrl;
+    settingsModal.classList.add('open');
+  };
+  document.getElementById('settingsCancel').onclick = function(){ settingsModal.classList.remove('open'); };
+  document.getElementById('settingsSave').onclick = function(){
+    webAppUrl = document.getElementById('webAppUrlInput').value.trim();
+    saveUrl(webAppUrl);
+    settingsModal.classList.remove('open');
+    if(!webAppUrl){ setStatus('No Web App URL saved yet — set it in Settings before uploading.', 'error'); }
+    else { setStatus('Web App URL saved.', 'success'); refreshLog(); }
+  };
+
+  // ---- Material / doc type chips ----
+  function wireChipRow(rowId, key, numId){
+    var row = document.getElementById(rowId);
+    row.querySelectorAll('.chip').forEach(function(btn){
+      btn.onclick = function(){
+        row.querySelectorAll('.chip').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        state[key] = btn.dataset.value;
+        document.getElementById(numId).classList.add('done');
+        if(key==='material'){
+          renderMonths();
+          document.getElementById('logMaterialLabel').textContent = '— ' + state.material;
+          refreshLog();
+        }
+      };
+    });
+  }
+  wireChipRow('materialRow','material','num1');
+  wireChipRow('docTypeRow','docType','num2');
+
+  // ---- Months ----
+  var monthRow = document.getElementById('monthRow');
+  var addMonthBtn = document.getElementById('addMonthBtn');
+  function renderMonths(){
+    Array.prototype.slice.call(monthRow.querySelectorAll('.chip')).forEach(function(el){ el.remove(); });
+    state.months.forEach(function(m){
+      var b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = m;
+      b.dataset.value = m;
+      if(m === state.month) b.classList.add('active');
+      b.onclick = function(){
+        monthRow.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('active'); });
+        b.classList.add('active');
+        state.month = m;
+        document.getElementById('num3').classList.add('done');
+      };
+      monthRow.insertBefore(b, addMonthBtn);
+    });
+  }
+  renderMonths();
+
+  var monthModal = document.getElementById('monthModal');
+  addMonthBtn.onclick = function(){
+    document.getElementById('newMonthInput').value = '';
+    monthModal.classList.add('open');
+  };
+  document.getElementById('monthCancel').onclick = function(){ monthModal.classList.remove('open'); };
+  document.getElementById('monthSave').onclick = function(){
+    var v = document.getElementById('newMonthInput').value.trim();
+    if(!v) return;
+    if(state.months.indexOf(v) === -1){
+      state.months.push(v);
+      saveMonths(state.months);
+    }
+    state.month = v;
+    renderMonths();
+    document.getElementById('num3').classList.add('done');
+    monthModal.classList.remove('open');
+  };
+
+  // ---- Camera capture ----
+  var fileInput = document.getElementById('fileInput');
+  var previewImg = document.getElementById('previewImg');
+  var previewPlaceholder = document.getElementById('previewPlaceholder');
+  var captureBtn = document.getElementById('captureBtn');
+  var retakeBtn = document.getElementById('retakeBtn');
+  var uploadBtn = document.getElementById('uploadBtn');
+  var ocrResult = document.getElementById('ocrResult');
+
+  captureBtn.onclick = function(){ fileInput.click(); };
+  fileInput.onchange = function(){
+    var file = fileInput.files && fileInput.files[0];
+    if(!file) return;
+    state.imageMime = file.type || 'image/jpeg';
+    var reader = new FileReader();
+    reader.onload = function(){
+      state.imageDataUrl = reader.result;
+      state.imageBlobBase64 = reader.result.split(',')[1];
+      previewImg.src = state.imageDataUrl;
+      previewImg.style.display = 'block';
+      previewPlaceholder.style.display = 'none';
+      captureBtn.style.display = 'none';
+      retakeBtn.style.display = 'inline-block';
+      uploadBtn.style.display = 'inline-block';
+      ocrResult.style.display = 'none';
+      setStatus('', '');
+    };
+    reader.readAsDataURL(file);
+  };
+  retakeBtn.onclick = function(){
+    state.imageDataUrl = null; state.imageBlobBase64 = null;
+    previewImg.style.display = 'none';
+    previewPlaceholder.style.display = 'block';
+    captureBtn.style.display = 'inline-block';
+    retakeBtn.style.display = 'none';
+    uploadBtn.style.display = 'none';
+    ocrResult.style.display = 'none';
+    fileInput.value = '';
+    setStatus('', '');
+  };
+
+  function setStatus(msg, kind){
+    var el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = 'status' + (kind ? ' ' + kind : '');
+  }
+
+  uploadBtn.onclick = function(){
+    if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings first.', 'error'); return; }
+    if(!state.material){ setStatus('Pick a material.', 'error'); return; }
+    if(!state.docType){ setStatus('Pick a document type.', 'error'); return; }
+    if(!state.month){ setStatus('Pick or add a month.', 'error'); return; }
+    if(!state.imageBlobBase64){ setStatus('Take a photo first.', 'error'); return; }
+
+    uploadBtn.disabled = true;
+    setStatus('Uploading and running OCR — this can take a few seconds…', 'busy');
+
+    var payload = {
+      material: state.material,
+      docType: state.docType,
+      month: state.month,
+      filename: state.material + '_' + state.docType + '_' + Date.now() + '.jpg',
+      mimeType: state.imageMime,
+      imageBase64: state.imageBlobBase64
+    };
+
+    fetch(webAppUrl, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }).then(function(r){ return r.json(); })
+      .then(function(res){
+        uploadBtn.disabled = false;
+        if(!res.ok){ setStatus('Error: ' + res.error, 'error'); return; }
+        setStatus('Saved and logged to the ' + state.material + ' sheet.', 'success');
+        ocrResult.style.display = 'block';
+        ocrResult.textContent = res.ocrText || '(no text recognized)';
+        retakeBtn.click();
+        refreshLog();
+      })
+      .catch(function(err){
+        uploadBtn.disabled = false;
+        setStatus('Network error: ' + err.message, 'error');
+      });
+  };
+
+  // ---- Log ----
+  function refreshLog(){
+    var area = document.getElementById('logArea');
+    if(!webAppUrl || !state.material){
+      area.innerHTML = '<div class="empty-log">Select a material to see its log.</div>';
+      return;
+    }
+    area.innerHTML = '<div class="empty-log">Loading…</div>';
+    fetch(webAppUrl + '?material=' + encodeURIComponent(state.material))
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(!res.ok){ area.innerHTML = '<div class="empty-log">Could not load log: ' + res.error + '</div>'; return; }
+        if(!res.rows || !res.rows.length){ area.innerHTML = '<div class="empty-log">No captures logged yet for ' + state.material + '.</div>'; return; }
+        var html = '<table><thead><tr><th>Time</th><th>Doc</th><th>Month</th><th>File</th><th>OCR</th></tr></thead><tbody>';
+        res.rows.forEach(function(r){
+          var t = r.timestamp ? new Date(r.timestamp).toLocaleString() : '';
+          html += '<tr><td>' + t + '</td><td>' + esc(r.docType) + '</td><td>' + esc(r.month) + '</td>' +
+                  '<td><a href="' + esc(r.link) + '" target="_blank" rel="noopener">' + esc(r.fileName) + '</a></td>' +
+                  '<td class="ocr-cell" title="' + esc(r.ocrText) + '">' + esc(r.ocrText) + '</td></tr>';
+        });
+        html += '</tbody></table>';
+        area.innerHTML = html;
+      })
+      .catch(function(err){
+        area.innerHTML = '<div class="empty-log">Could not load log: ' + err.message + '</div>';
+      });
+  }
+  function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings to get started.', ''); }
+})();
+</script>
+</body>
+</html>
