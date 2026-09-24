@@ -223,10 +223,17 @@
 </div>
 
 <script>
+// ==== EDIT THIS BEFORE PUSHING TO GITHUB ====
+// Paste your Apps Script Web App URL (ends in /exec) below, inside the quotes.
+// Once this is set, the page never needs the Settings popup — it works for
+// anyone who opens the hosted page, on any device.
+var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqxdiidcET8JMJWPmKmzp6almtVbKUhLhYLOAXU4rI0qish7oIrqcsn6/exec';
+// =============================================
+
 (function(){
   var state = { material:null, docType:null, month:null, months:[], imageDataUrl:null, imageBlobBase64:null, imageMime:null };
 
-  function loadUrl(){ try{ return localStorage.getItem('irm_webapp_url') || ''; }catch(e){ return ''; } }
+  function loadUrl(){ try{ return localStorage.getItem('irm_webapp_url') || DEFAULT_WEBAPP_URL || ''; }catch(e){ return DEFAULT_WEBAPP_URL || ''; } }
   function saveUrl(v){ try{ localStorage.setItem('irm_webapp_url', v); }catch(e){} }
   function loadMonths(){ try{ return JSON.parse(localStorage.getItem('irm_months')||'[]'); }catch(e){ return []; } }
   function saveMonths(list){ try{ localStorage.setItem('irm_months', JSON.stringify(list)); }catch(e){} }
