@@ -8,38 +8,21 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#EEF1EF;
-    --surface:#FFFFFF;
-    --ink:#1C2B33;
-    --ink-soft:#5C6B73;
-    --steel:#35617D;
-    --steel-dark:#254A62;
-    --amber:#E2A33D;
-    --amber-dark:#C4841F;
-    --line:#D6DBD8;
-    --success:#3F7D58;
-    --error:#B3452C;
+    --bg:#EEF1EF; --surface:#FFFFFF; --ink:#1C2B33; --ink-soft:#5C6B73;
+    --steel:#35617D; --steel-dark:#254A62; --amber:#E2A33D; --amber-dark:#C4841F;
+    --line:#D6DBD8; --success:#3F7D58; --error:#B3452C;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;background:var(--bg);color:var(--ink);
-    font-family:'IBM Plex Sans', system-ui, sans-serif;-webkit-font-smoothing:antialiased;
-  }
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans', system-ui, sans-serif;-webkit-font-smoothing:antialiased;}
   .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
   header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;}
   header h1{font-size:1.35rem;font-weight:600;margin:0 0 4px;letter-spacing:-0.01em;}
   header p{margin:0;color:var(--ink-soft);font-size:0.9rem;}
-  .gear{
-    border:1px solid var(--line);background:var(--surface);border-radius:6px;
-    padding:8px 12px;font-size:0.8rem;color:var(--steel-dark);cursor:pointer;font-family:inherit;white-space:nowrap;
-  }
+  .gear{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:8px 12px;font-size:0.8rem;color:var(--steel-dark);cursor:pointer;font-family:inherit;white-space:nowrap;}
   .gear:hover{border-color:var(--steel);}
 
   .crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:18px;font-size:0.85rem;}
-  .crumb{
-    background:none;border:none;font-family:inherit;font-size:0.85rem;cursor:pointer;
-    color:var(--steel-dark);padding:2px 2px;
-  }
+  .crumb{background:none;border:none;font-family:inherit;font-size:0.85rem;cursor:pointer;color:var(--steel-dark);padding:2px;}
   .crumb:hover{text-decoration:underline;}
   .crumb.current{color:var(--ink);font-weight:600;cursor:default;}
   .crumb.current:hover{text-decoration:none;}
@@ -47,37 +30,32 @@
 
   .folder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
   .folder-btn{
-    background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--steel);
+    position:relative;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--steel);
     border-radius:6px;padding:20px 14px;cursor:pointer;font-family:inherit;
     display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;
     transition:border-color .15s, transform .1s;
   }
   .folder-btn:hover{border-color:var(--steel);}
   .folder-btn:active{transform:scale(0.98);}
-  .folder-btn .label{font-size:1rem;font-weight:600;color:var(--ink);}
+  .folder-btn .label{font-size:1rem;font-weight:600;color:var(--ink);padding-right:44px;}
   .folder-btn .sub{font-size:0.76rem;color:var(--ink-soft);}
   .folder-icon{color:var(--steel);}
-  .folder-btn.add{
-    border-top-color:var(--line);border-style:dashed;justify-content:center;align-items:center;
-    color:var(--steel-dark);
+  .folder-btn.add{border-top-color:var(--line);border-style:dashed;justify-content:center;align-items:center;color:var(--steel-dark);}
+  .folder-btn.add .label{color:var(--steel-dark);font-weight:500;padding-right:0;}
+  .folder-actions{position:absolute;top:12px;right:10px;display:flex;gap:4px;}
+  .icon-btn{
+    background:none;border:none;padding:4px;cursor:pointer;color:var(--ink-soft);
+    border-radius:4px;line-height:0;
   }
-  .folder-btn.add .label{color:var(--steel-dark);font-weight:500;}
+  .icon-btn:hover{background:var(--bg);color:var(--steel-dark);}
+  .icon-btn.del-ic:hover{color:var(--error);}
 
-  .panel{
-    background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--steel);
-    border-radius:4px;padding:18px 20px;margin-bottom:16px;
-  }
-  .panel h2{
-    font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);
-    margin:0 0 12px;font-weight:600;
-  }
+  .panel{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--steel);border-radius:4px;padding:18px 20px;margin-bottom:16px;}
+  .panel h2{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);margin:0 0 12px;font-weight:600;}
   .empty-hint{color:var(--ink-soft);font-size:0.88rem;padding:6px 0 2px;}
 
   .camera-area{display:flex;flex-direction:column;gap:12px;align-items:center;}
-  .preview{
-    width:100%;max-width:420px;aspect-ratio:4/3;border-radius:4px;border:1px solid var(--line);
-    background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;
-  }
+  .preview{width:100%;max-width:420px;aspect-ratio:4/3;border-radius:4px;border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
   .preview img{width:100%;height:100%;object-fit:cover;}
   .preview .placeholder{color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:0 20px;}
   input[type=file]{display:none;}
@@ -94,34 +72,29 @@
   .status.success{color:var(--success);}
   .status.busy{color:var(--steel-dark);}
 
-  .ocr-result{
-    margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;border:1px solid var(--line);
-    font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.5;white-space:pre-wrap;
-    max-height:160px;overflow:auto;
-  }
+  .ocr-result{margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;border:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.5;white-space:pre-wrap;max-height:160px;overflow:auto;}
 
   table{width:100%;border-collapse:collapse;font-size:0.82rem;}
-  th{
-    text-align:left;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;
-    font-size:0.68rem;border-bottom:1px solid var(--line);padding:6px 8px;
-  }
+  th{text-align:left;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;font-size:0.68rem;border-bottom:1px solid var(--line);padding:6px 8px;}
   td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;}
   td.ocr-cell{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft);}
   td a{color:var(--steel-dark);}
 
-  .modal-backdrop{
-    position:fixed;inset:0;background:rgba(28,43,51,0.55);display:none;align-items:center;
-    justify-content:center;padding:20px;z-index:10;
-  }
+  .modal-backdrop{position:fixed;inset:0;background:rgba(28,43,51,0.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:10;}
   .modal-backdrop.open{display:flex;}
   .modal{background:var(--surface);border-radius:6px;padding:22px;max-width:420px;width:100%;}
   .modal h3{margin:0 0 10px;font-size:1rem;}
   .modal p{color:var(--ink-soft);font-size:0.82rem;line-height:1.5;margin:0 0 14px;}
-  .modal input{
-    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px;
-    font-family:'IBM Plex Mono',monospace;font-size:0.82rem;margin-bottom:14px;
-  }
+  .modal input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;margin-bottom:14px;}
   .modal .btn-row{justify-content:flex-end;}
+
+  .toast{
+    position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+    padding:10px 18px;border-radius:5px;font-size:0.82rem;z-index:20;opacity:0;pointer-events:none;
+    transition:opacity .2s;max-width:88vw;text-align:center;
+  }
+  .toast.show{opacity:1;}
+  .toast.error{background:var(--error);}
 </style>
 </head>
 <body>
@@ -136,17 +109,11 @@
 
   <nav class="crumbs" id="crumbs"></nav>
 
-  <div id="screen-home">
-    <div class="folder-grid" id="materialGrid"></div>
-  </div>
-
-  <div id="screen-docType" style="display:none;">
-    <div class="folder-grid" id="docTypeGrid"></div>
-  </div>
-
-  <div id="screen-month" style="display:none;">
-    <div class="folder-grid" id="monthGrid"></div>
-  </div>
+  <div id="screen-home"><div class="folder-grid" id="materialGrid"></div></div>
+  <div id="screen-docType" style="display:none;"><div class="folder-grid" id="docTypeGrid"></div></div>
+  <div id="screen-year" style="display:none;"><div class="folder-grid" id="yearGrid"></div></div>
+  <div id="screen-month" style="display:none;"><div class="folder-grid" id="monthGrid"></div></div>
+  <div id="screen-date" style="display:none;"><div class="folder-grid" id="dateGrid"></div></div>
 
   <div id="screen-capture" style="display:none;">
     <section class="panel">
@@ -166,7 +133,6 @@
         <div class="ocr-result" id="ocrResult" style="display:none;"></div>
       </div>
     </section>
-
     <section class="panel">
       <h2>Recent captures in this folder</h2>
       <div id="logArea"><div class="empty-hint">Loading…</div></div>
@@ -186,17 +152,19 @@
   </div>
 </div>
 
-<div class="modal-backdrop" id="monthModal">
+<div class="modal-backdrop" id="nameModal">
   <div class="modal">
-    <h3>Add month folder</h3>
-    <p>Name the new month subfolder, e.g. "August" or "August 2026".</p>
-    <input type="text" id="newMonthInput" placeholder="August">
+    <h3 id="nameModalTitle">Add folder</h3>
+    <p id="nameModalHint"></p>
+    <input type="text" id="nameModalInput" placeholder="">
     <div class="btn-row">
-      <button class="btn btn-secondary" id="monthCancel">Cancel</button>
-      <button class="btn btn-primary" id="monthSave">Add</button>
+      <button class="btn btn-secondary" id="nameModalCancel">Cancel</button>
+      <button class="btn btn-primary" id="nameModalSave">Save</button>
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 // ==== EDIT THIS BEFORE PUSHING TO GITHUB ====
@@ -210,17 +178,41 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
   var MATERIALS = ['Oil', 'Film', 'Seasoning'];
   var DOC_TYPES = ['CoA', 'Inspection'];
 
-  var state = { material:null, docType:null, month:null, imageDataUrl:null, imageBlobBase64:null, imageMime:null };
+  var state = { material:null, docType:null, year:null, month:null, date:null, imageDataUrl:null, imageBlobBase64:null, imageMime:null };
 
   function loadUrl(){ try{ return localStorage.getItem('irm_webapp_url') || DEFAULT_WEBAPP_URL || ''; }catch(e){ return DEFAULT_WEBAPP_URL || ''; } }
   function saveUrl(v){ try{ localStorage.setItem('irm_webapp_url', v); }catch(e){} }
-  function monthsKey(material, docType){ return 'irm_months_' + material + '_' + docType; }
-  function loadMonths(material, docType){ try{ return JSON.parse(localStorage.getItem(monthsKey(material,docType))||'[]'); }catch(e){ return []; } }
-  function saveMonths(material, docType, list){ try{ localStorage.setItem(monthsKey(material,docType), JSON.stringify(list)); }catch(e){} }
-
   var webAppUrl = loadUrl();
 
+  // ---- generic localStorage list helpers ----
+  function loadList(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
+  function saveList(key, list){ try{ localStorage.setItem(key, JSON.stringify(list)); }catch(e){} }
+  function moveList(oldKey, newKey){
+    var v = localStorage.getItem(oldKey);
+    if(v!==null){ localStorage.setItem(newKey, v); localStorage.removeItem(oldKey); }
+  }
+
+  function yearsKey(m,d){ return 'irm_years_'+m+'_'+d; }
+  function monthsKey(m,d,y){ return 'irm_months_'+m+'_'+d+'_'+y; }
+  function datesKey(m,d,y,mo){ return 'irm_dates_'+m+'_'+d+'_'+y+'_'+mo; }
+
+  function toast(msg, kind){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (kind==='error' ? ' error' : '');
+    clearTimeout(t._h);
+    t._h = setTimeout(function(){ t.className='toast'; }, 3200);
+  }
+
+  function postAction(action, payload){
+    if(!webAppUrl) return Promise.resolve({ok:false, error:'no webapp url'});
+    payload.action = action;
+    return fetch(webAppUrl, { method:'POST', body: JSON.stringify(payload) }).then(function(r){ return r.json(); }).catch(function(err){ return {ok:false, error:err.message}; });
+  }
+
   var folderSvg = '<svg class="folder-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6.5C3 5.67157 3.67157 5 4.5 5H9.5L11.5 7H19.5C20.3284 7 21 7.67157 21 8.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  var pencilSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20L4.8 16.2L15.5 5.5C16.3 4.7 17.6 4.7 18.4 5.5C19.2 6.3 19.2 7.6 18.4 8.4L7.7 19.1L4 20Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  var trashSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7H19M9.5 7V5.5C9.5 4.7 10.2 4 11 4H13C13.8 4 14.5 4.7 14.5 5.5V7M17.5 7L17 19C17 19.8 16.3 20.5 15.5 20.5H8.5C7.7 20.5 7 19.8 7 19L6.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   // ---- Settings modal ----
   var settingsModal = document.getElementById('settingsModal');
@@ -233,118 +225,274 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     webAppUrl = document.getElementById('webAppUrlInput').value.trim();
     saveUrl(webAppUrl);
     settingsModal.classList.remove('open');
-    if(state.material && state.docType && state.month){ refreshLog(); }
+    if(state.material && state.docType && state.year && state.month && state.date){ refreshLog(); }
+  };
+
+  // ---- generic name modal (used for add + rename) ----
+  var nameModal = document.getElementById('nameModal');
+  var nameModalInput = document.getElementById('nameModalInput');
+  var nameModalResolve = null;
+  function askName(title, hint, placeholder, prefill){
+    document.getElementById('nameModalTitle').textContent = title;
+    document.getElementById('nameModalHint').textContent = hint;
+    nameModalInput.placeholder = placeholder || '';
+    nameModalInput.value = prefill || '';
+    nameModal.classList.add('open');
+    setTimeout(function(){ nameModalInput.focus(); }, 50);
+    return new Promise(function(resolve){ nameModalResolve = resolve; });
+  }
+  document.getElementById('nameModalCancel').onclick = function(){ nameModal.classList.remove('open'); if(nameModalResolve) nameModalResolve(null); };
+  document.getElementById('nameModalSave').onclick = function(){
+    var v = nameModalInput.value.trim();
+    nameModal.classList.remove('open');
+    if(nameModalResolve) nameModalResolve(v || null);
   };
 
   // ---- Screen management ----
   var screens = {
     home: document.getElementById('screen-home'),
     docType: document.getElementById('screen-docType'),
+    year: document.getElementById('screen-year'),
     month: document.getElementById('screen-month'),
+    date: document.getElementById('screen-date'),
     capture: document.getElementById('screen-capture')
   };
   function showScreen(name){
     Object.keys(screens).forEach(function(k){ screens[k].style.display = (k===name) ? 'block' : 'none'; });
     renderCrumbs();
   }
-
   function renderCrumbs(){
     var el = document.getElementById('crumbs');
     var parts = [{label:'Home', action:goHome}];
     if(state.material) parts.push({label:state.material, action:openDocTypeScreen});
-    if(state.docType) parts.push({label:state.docType, action:openMonthScreen});
-    if(state.month) parts.push({label:state.month, action:null});
+    if(state.docType) parts.push({label:state.docType, action:openYearScreen});
+    if(state.year) parts.push({label:state.year, action:openMonthScreen});
+    if(state.month) parts.push({label:state.month, action:openDateScreen});
+    if(state.date) parts.push({label:state.date, action:null});
     el.innerHTML = '';
     parts.forEach(function(p, i){
-      if(i>0){
-        var sep = document.createElement('span');
-        sep.className = 'crumb-sep';
-        sep.textContent = '/';
-        el.appendChild(sep);
-      }
+      if(i>0){ var sep=document.createElement('span'); sep.className='crumb-sep'; sep.textContent='/'; el.appendChild(sep); }
       var b = document.createElement('button');
       b.className = 'crumb' + (p.action ? '' : ' current');
       b.textContent = p.label;
-      if(p.action) b.onclick = p.action;
-      else b.disabled = true;
+      if(p.action) b.onclick = p.action; else b.disabled = true;
       el.appendChild(b);
     });
   }
 
-  // ---- Home: material folders ----
+  // ---- generic folder grid renderer ----
+  // items: array of names. opts: {subLabel, onOpen(name), onRename(name), onDelete(name), onAdd(), addLabel, emptyText}
+  function renderFolderGrid(grid, items, opts){
+    grid.innerHTML = '';
+    if(!items.length){
+      var hint = document.createElement('div');
+      hint.className='empty-hint'; hint.style.gridColumn='1/-1';
+      hint.textContent = opts.emptyText || 'No folders yet — add one to get started.';
+      grid.appendChild(hint);
+    }
+    items.forEach(function(name){
+      var card = document.createElement('div');
+      card.className = 'folder-btn';
+      card.innerHTML = folderSvg +
+        '<span class="label">'+esc(name)+'</span>' +
+        (opts.subLabel ? '<span class="sub">'+esc(opts.subLabel)+'</span>' : '') +
+        '<div class="folder-actions">' +
+          '<button class="icon-btn rename-ic" title="Rename" type="button">'+pencilSvg+'</button>' +
+          '<button class="icon-btn del-ic" title="Delete" type="button">'+trashSvg+'</button>' +
+        '</div>';
+      card.querySelector('.rename-ic').onclick = function(ev){ ev.stopPropagation(); opts.onRename(name); };
+      card.querySelector('.del-ic').onclick = function(ev){ ev.stopPropagation(); opts.onDelete(name); };
+      card.onclick = function(){ opts.onOpen(name); };
+      grid.appendChild(card);
+    });
+    var addBtn = document.createElement('button');
+    addBtn.className = 'folder-btn add';
+    addBtn.innerHTML = '<span class="label">+ '+esc(opts.addLabel)+'</span>';
+    addBtn.onclick = opts.onAdd;
+    grid.appendChild(addBtn);
+  }
+
+  // ---- Home: material folders (fixed set, no rename/delete) ----
   function renderMaterialGrid(){
     var grid = document.getElementById('materialGrid');
     grid.innerHTML = '';
     MATERIALS.forEach(function(m){
       var b = document.createElement('button');
       b.className = 'folder-btn';
-      b.innerHTML = folderSvg + '<span class="label">' + m + '</span><span class="sub">CoA · Inspection</span>';
-      b.onclick = function(){ state.material = m; state.docType = null; state.month = null; openDocTypeScreen(); };
+      b.innerHTML = folderSvg + '<span class="label">' + esc(m) + '</span><span class="sub">CoA · Inspection</span>';
+      b.onclick = function(){ state.material=m; state.docType=null; state.year=null; state.month=null; state.date=null; openDocTypeScreen(); };
       grid.appendChild(b);
     });
   }
-  function goHome(){ state.material=null; state.docType=null; state.month=null; showScreen('home'); }
+  function goHome(){ state.material=null; state.docType=null; state.year=null; state.month=null; state.date=null; showScreen('home'); }
 
-  // ---- Doc type folders ----
+  // ---- Doc type folders (fixed set, no rename/delete) ----
   function openDocTypeScreen(){
     var grid = document.getElementById('docTypeGrid');
     grid.innerHTML = '';
     DOC_TYPES.forEach(function(d){
       var b = document.createElement('button');
       b.className = 'folder-btn';
-      b.innerHTML = folderSvg + '<span class="label">' + d + '</span><span class="sub">' + state.material + '</span>';
-      b.onclick = function(){ state.docType = d; state.month = null; openMonthScreen(); };
+      b.innerHTML = folderSvg + '<span class="label">' + esc(d) + '</span><span class="sub">' + esc(state.material) + '</span>';
+      b.onclick = function(){ state.docType=d; state.year=null; state.month=null; state.date=null; openYearScreen(); };
       grid.appendChild(b);
     });
     showScreen('docType');
   }
 
-  // ---- Month folders ----
-  var monthModal = document.getElementById('monthModal');
+  // ---- Year folders (manual) ----
+  function openYearScreen(){
+    state.year=null; state.month=null; state.date=null;
+    renderYearGrid();
+    showScreen('year');
+  }
+  function renderYearGrid(){
+    var items = loadList(yearsKey(state.material, state.docType));
+    renderFolderGrid(document.getElementById('yearGrid'), items, {
+      subLabel: state.material + ' · ' + state.docType,
+      addLabel: 'New year',
+      emptyText: 'No year folders yet — add one, e.g. 2026.',
+      onOpen: function(y){ state.year=y; openMonthScreen(); },
+      onAdd: function(){
+        askName('Add year folder', 'Name the year, e.g. 2026.', '2026', '').then(function(v){
+          if(!v) return;
+          var list = loadList(yearsKey(state.material, state.docType));
+          if(list.indexOf(v)===-1){ list.push(v); saveList(yearsKey(state.material, state.docType), list); }
+          renderYearGrid();
+        });
+      },
+      onRename: function(oldY){
+        askName('Rename year folder', 'This also renames the matching folder in Drive, if it has any photos yet.', '2026', oldY).then(function(newY){
+          if(!newY || newY===oldY) return;
+          var mKey = state.material, dKey = state.docType;
+          postAction('renameFolder', { path:[mKey, dKey, oldY], newName:newY }).then(function(res){
+            if(!res.ok) toast('Renamed locally, but Drive rename failed: ' + res.error, 'error'); else toast('Renamed.');
+          });
+          var list = loadList(yearsKey(mKey, dKey));
+          var idx = list.indexOf(oldY);
+          if(idx>-1) list[idx]=newY;
+          saveList(yearsKey(mKey, dKey), list);
+          // migrate months + dates keyed under the old year name
+          var months = loadList(monthsKey(mKey, dKey, oldY));
+          saveList(monthsKey(mKey, dKey, newY), months);
+          localStorage.removeItem(monthsKey(mKey, dKey, oldY));
+          months.forEach(function(mo){
+            moveList(datesKey(mKey, dKey, oldY, mo), datesKey(mKey, dKey, newY, mo));
+          });
+          renderYearGrid();
+        });
+      },
+      onDelete: function(y){
+        if(!confirm('Delete year folder "'+y+'"? This also trashes the matching Drive folder and everything in it.')) return;
+        var mKey = state.material, dKey = state.docType;
+        postAction('deleteFolder', { path:[mKey, dKey, y] }).then(function(res){
+          if(!res.ok) toast('Deleted locally, but Drive delete failed: ' + res.error, 'error'); else toast('Deleted.');
+        });
+        var list = loadList(yearsKey(mKey, dKey)).filter(function(x){ return x!==y; });
+        saveList(yearsKey(mKey, dKey), list);
+        var months = loadList(monthsKey(mKey, dKey, y));
+        months.forEach(function(mo){ localStorage.removeItem(datesKey(mKey, dKey, y, mo)); });
+        localStorage.removeItem(monthsKey(mKey, dKey, y));
+        renderYearGrid();
+      }
+    });
+  }
+
+  // ---- Month folders (manual) ----
   function openMonthScreen(){
+    state.month=null; state.date=null;
     renderMonthGrid();
     showScreen('month');
   }
   function renderMonthGrid(){
-    var grid = document.getElementById('monthGrid');
-    grid.innerHTML = '';
-    var months = loadMonths(state.material, state.docType);
-    months.forEach(function(m){
-      var b = document.createElement('button');
-      b.className = 'folder-btn';
-      b.innerHTML = folderSvg + '<span class="label">' + m + '</span><span class="sub">' + state.material + ' · ' + state.docType + '</span>';
-      b.onclick = function(){ state.month = m; openCaptureScreen(); };
-      grid.appendChild(b);
+    var m=state.material, d=state.docType, y=state.year;
+    var items = loadList(monthsKey(m,d,y));
+    renderFolderGrid(document.getElementById('monthGrid'), items, {
+      subLabel: m + ' · ' + d + ' · ' + y,
+      addLabel: 'New month',
+      emptyText: 'No month folders yet — add one, e.g. August.',
+      onOpen: function(mo){ state.month=mo; openDateScreen(); },
+      onAdd: function(){
+        askName('Add month folder', 'Name the month, e.g. August.', 'August', '').then(function(v){
+          if(!v) return;
+          var list = loadList(monthsKey(m,d,y));
+          if(list.indexOf(v)===-1){ list.push(v); saveList(monthsKey(m,d,y), list); }
+          renderMonthGrid();
+        });
+      },
+      onRename: function(oldMo){
+        askName('Rename month folder', 'This also renames the matching folder in Drive, if it has any photos yet.', 'August', oldMo).then(function(newMo){
+          if(!newMo || newMo===oldMo) return;
+          postAction('renameFolder', { path:[m,d,y,oldMo], newName:newMo }).then(function(res){
+            if(!res.ok) toast('Renamed locally, but Drive rename failed: ' + res.error, 'error'); else toast('Renamed.');
+          });
+          var list = loadList(monthsKey(m,d,y));
+          var idx = list.indexOf(oldMo);
+          if(idx>-1) list[idx]=newMo;
+          saveList(monthsKey(m,d,y), list);
+          moveList(datesKey(m,d,y,oldMo), datesKey(m,d,y,newMo));
+          renderMonthGrid();
+        });
+      },
+      onDelete: function(mo){
+        if(!confirm('Delete month folder "'+mo+'"? This also trashes the matching Drive folder and everything in it.')) return;
+        postAction('deleteFolder', { path:[m,d,y,mo] }).then(function(res){
+          if(!res.ok) toast('Deleted locally, but Drive delete failed: ' + res.error, 'error'); else toast('Deleted.');
+        });
+        var list = loadList(monthsKey(m,d,y)).filter(function(x){ return x!==mo; });
+        saveList(monthsKey(m,d,y), list);
+        localStorage.removeItem(datesKey(m,d,y,mo));
+        renderMonthGrid();
+      }
     });
-    var addBtn = document.createElement('button');
-    addBtn.className = 'folder-btn add';
-    addBtn.innerHTML = '<span class="label">+ New month</span>';
-    addBtn.onclick = function(){
-      document.getElementById('newMonthInput').value = '';
-      monthModal.classList.add('open');
-    };
-    grid.appendChild(addBtn);
-    if(!months.length){
-      var hint = document.createElement('div');
-      hint.className = 'empty-hint';
-      hint.style.gridColumn = '1/-1';
-      hint.textContent = 'No month folders yet — add one to get started.';
-      grid.insertBefore(hint, grid.firstChild);
-    }
   }
-  document.getElementById('monthCancel').onclick = function(){ monthModal.classList.remove('open'); };
-  document.getElementById('monthSave').onclick = function(){
-    var v = document.getElementById('newMonthInput').value.trim();
-    if(!v) return;
-    var months = loadMonths(state.material, state.docType);
-    if(months.indexOf(v) === -1){
-      months.push(v);
-      saveMonths(state.material, state.docType, months);
-    }
-    monthModal.classList.remove('open');
-    state.month = v;
-    openCaptureScreen();
-  };
+
+  // ---- Date folders (manual, leaf level before capture) ----
+  function openDateScreen(){
+    state.date=null;
+    renderDateGrid();
+    showScreen('date');
+  }
+  function renderDateGrid(){
+    var m=state.material, d=state.docType, y=state.year, mo=state.month;
+    var items = loadList(datesKey(m,d,y,mo));
+    renderFolderGrid(document.getElementById('dateGrid'), items, {
+      subLabel: m + ' · ' + d + ' · ' + y + ' · ' + mo,
+      addLabel: 'New date',
+      emptyText: 'No date folders yet — add one, e.g. 15 or Aug 15.',
+      onOpen: function(da){ state.date=da; openCaptureScreen(); },
+      onAdd: function(){
+        askName('Add date folder', 'Name the date, e.g. 15 or Aug 15.', '15', '').then(function(v){
+          if(!v) return;
+          var list = loadList(datesKey(m,d,y,mo));
+          if(list.indexOf(v)===-1){ list.push(v); saveList(datesKey(m,d,y,mo), list); }
+          renderDateGrid();
+        });
+      },
+      onRename: function(oldDa){
+        askName('Rename date folder', 'This also renames the matching folder in Drive, if it has any photos yet.', '15', oldDa).then(function(newDa){
+          if(!newDa || newDa===oldDa) return;
+          postAction('renameFolder', { path:[m,d,y,mo,oldDa], newName:newDa }).then(function(res){
+            if(!res.ok) toast('Renamed locally, but Drive rename failed: ' + res.error, 'error'); else toast('Renamed.');
+          });
+          var list = loadList(datesKey(m,d,y,mo));
+          var idx = list.indexOf(oldDa);
+          if(idx>-1) list[idx]=newDa;
+          saveList(datesKey(m,d,y,mo), list);
+          renderDateGrid();
+        });
+      },
+      onDelete: function(da){
+        if(!confirm('Delete date folder "'+da+'"? This also trashes the matching Drive folder and everything in it.')) return;
+        postAction('deleteFolder', { path:[m,d,y,mo,da] }).then(function(res){
+          if(!res.ok) toast('Deleted locally, but Drive delete failed: ' + res.error, 'error'); else toast('Deleted.');
+        });
+        var list = loadList(datesKey(m,d,y,mo)).filter(function(x){ return x!==da; });
+        saveList(datesKey(m,d,y,mo), list);
+        renderDateGrid();
+      }
+    });
+  }
 
   // ---- Capture screen ----
   var fileInput = document.getElementById('fileInput');
@@ -361,17 +509,16 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     refreshLog();
   }
   function resetCapture(){
-    state.imageDataUrl = null; state.imageBlobBase64 = null;
-    previewImg.style.display = 'none';
-    previewPlaceholder.style.display = 'block';
-    captureBtn.style.display = 'inline-block';
-    retakeBtn.style.display = 'none';
-    uploadBtn.style.display = 'none';
-    ocrResult.style.display = 'none';
-    fileInput.value = '';
+    state.imageDataUrl=null; state.imageBlobBase64=null;
+    previewImg.style.display='none';
+    previewPlaceholder.style.display='block';
+    captureBtn.style.display='inline-block';
+    retakeBtn.style.display='none';
+    uploadBtn.style.display='none';
+    ocrResult.style.display='none';
+    fileInput.value='';
     setStatus('', '');
   }
-
   captureBtn.onclick = function(){ fileInput.click(); };
   fileInput.onchange = function(){
     var file = fileInput.files && fileInput.files[0];
@@ -382,12 +529,12 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
       state.imageDataUrl = reader.result;
       state.imageBlobBase64 = reader.result.split(',')[1];
       previewImg.src = state.imageDataUrl;
-      previewImg.style.display = 'block';
-      previewPlaceholder.style.display = 'none';
-      captureBtn.style.display = 'none';
-      retakeBtn.style.display = 'inline-block';
-      uploadBtn.style.display = 'inline-block';
-      ocrResult.style.display = 'none';
+      previewImg.style.display='block';
+      previewPlaceholder.style.display='none';
+      captureBtn.style.display='none';
+      retakeBtn.style.display='inline-block';
+      uploadBtn.style.display='inline-block';
+      ocrResult.style.display='none';
       setStatus('', '');
     };
     reader.readAsDataURL(file);
@@ -403,49 +550,35 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
   uploadBtn.onclick = function(){
     if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings first.', 'error'); return; }
     if(!state.imageBlobBase64){ setStatus('Take a photo first.', 'error'); return; }
-
     uploadBtn.disabled = true;
     setStatus('Uploading and running OCR — this can take a few seconds…', 'busy');
-
     var payload = {
-      material: state.material,
-      docType: state.docType,
-      month: state.month,
+      material: state.material, docType: state.docType, year: state.year, month: state.month, date: state.date,
       filename: state.material + '_' + state.docType + '_' + Date.now() + '.jpg',
-      mimeType: state.imageMime,
-      imageBase64: state.imageBlobBase64
+      mimeType: state.imageMime, imageBase64: state.imageBlobBase64
     };
-
-    fetch(webAppUrl, { method: 'POST', body: JSON.stringify(payload) })
-      .then(function(r){ return r.json(); })
-      .then(function(res){
-        uploadBtn.disabled = false;
-        if(!res.ok){ setStatus('Error: ' + res.error, 'error'); return; }
-        setStatus('Saved and logged to the ' + state.material + ' sheet.', 'success');
-        ocrResult.style.display = 'block';
-        ocrResult.textContent = res.ocrText || '(no text recognized)';
-        resetCapture();
-        refreshLog();
-      })
-      .catch(function(err){
-        uploadBtn.disabled = false;
-        setStatus('Network error: ' + err.message, 'error');
-      });
+    postAction('upload', payload).then(function(res){
+      uploadBtn.disabled = false;
+      if(!res.ok){ setStatus('Error: ' + res.error, 'error'); return; }
+      setStatus('Saved and logged to the ' + state.material + ' sheet.', 'success');
+      ocrResult.style.display='block';
+      ocrResult.textContent = res.ocrText || '(no text recognized)';
+      resetCapture();
+      refreshLog();
+    });
   };
 
-  // ---- Log (filtered to current material, shown for current month) ----
   function refreshLog(){
     var area = document.getElementById('logArea');
-    if(!webAppUrl){
-      area.innerHTML = '<div class="empty-hint">Set your Apps Script Web App URL in Settings to see the log.</div>';
-      return;
-    }
+    if(!webAppUrl){ area.innerHTML = '<div class="empty-hint">Set your Apps Script Web App URL in Settings to see the log.</div>'; return; }
     area.innerHTML = '<div class="empty-hint">Loading…</div>';
     fetch(webAppUrl + '?material=' + encodeURIComponent(state.material))
       .then(function(r){ return r.json(); })
       .then(function(res){
-        if(!res.ok){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + res.error + '</div>'; return; }
-        var rows = (res.rows || []).filter(function(r){ return r.docType === state.docType && r.month === state.month; });
+        if(!res.ok){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + esc(res.error) + '</div>'; return; }
+        var rows = (res.rows || []).filter(function(r){
+          return r.docType===state.docType && r.year===state.year && r.month===state.month && r.date===state.date;
+        });
         if(!rows.length){ area.innerHTML = '<div class="empty-hint">No captures logged yet in this folder.</div>'; return; }
         var html = '<table><thead><tr><th>Time</th><th>File</th><th>OCR</th></tr></thead><tbody>';
         rows.forEach(function(r){
@@ -457,14 +590,10 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
         html += '</tbody></table>';
         area.innerHTML = html;
       })
-      .catch(function(err){
-        area.innerHTML = '<div class="empty-hint">Could not load log: ' + err.message + '</div>';
-      });
+      .catch(function(err){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + esc(err.message) + '</div>'; });
   }
   function esc(s){
-    return String(s==null?'':s).replace(/[&<>"']/g, function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
+    return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
   }
 
   renderMaterialGrid();
