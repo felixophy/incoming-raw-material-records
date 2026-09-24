@@ -22,115 +22,99 @@
   }
   *{box-sizing:border-box;}
   body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'IBM Plex Sans', system-ui, sans-serif;
-    -webkit-font-smoothing:antialiased;
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;-webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
-  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;}
   header h1{font-size:1.35rem;font-weight:600;margin:0 0 4px;letter-spacing:-0.01em;}
   header p{margin:0;color:var(--ink-soft);font-size:0.9rem;}
   .gear{
     border:1px solid var(--line);background:var(--surface);border-radius:6px;
-    padding:8px 12px;font-size:0.8rem;color:var(--steel-dark);cursor:pointer;
-    font-family:inherit;white-space:nowrap;
+    padding:8px 12px;font-size:0.8rem;color:var(--steel-dark);cursor:pointer;font-family:inherit;white-space:nowrap;
   }
   .gear:hover{border-color:var(--steel);}
 
+  .crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:18px;font-size:0.85rem;}
+  .crumb{
+    background:none;border:none;font-family:inherit;font-size:0.85rem;cursor:pointer;
+    color:var(--steel-dark);padding:2px 2px;
+  }
+  .crumb:hover{text-decoration:underline;}
+  .crumb.current{color:var(--ink);font-weight:600;cursor:default;}
+  .crumb.current:hover{text-decoration:none;}
+  .crumb-sep{color:var(--ink-soft);}
+
+  .folder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+  .folder-btn{
+    background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--steel);
+    border-radius:6px;padding:20px 14px;cursor:pointer;font-family:inherit;
+    display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;
+    transition:border-color .15s, transform .1s;
+  }
+  .folder-btn:hover{border-color:var(--steel);}
+  .folder-btn:active{transform:scale(0.98);}
+  .folder-btn .label{font-size:1rem;font-weight:600;color:var(--ink);}
+  .folder-btn .sub{font-size:0.76rem;color:var(--ink-soft);}
+  .folder-icon{color:var(--steel);}
+  .folder-btn.add{
+    border-top-color:var(--line);border-style:dashed;justify-content:center;align-items:center;
+    color:var(--steel-dark);
+  }
+  .folder-btn.add .label{color:var(--steel-dark);font-weight:500;}
+
   .panel{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-top:3px solid var(--steel);
-    border-radius:4px;
-    padding:18px 20px;
-    margin-bottom:16px;
+    background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--steel);
+    border-radius:4px;padding:18px 20px;margin-bottom:16px;
   }
   .panel h2{
-    font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;
-    color:var(--ink-soft);margin:0 0 12px;font-weight:600;
-    display:flex;align-items:center;gap:8px;
+    font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);
+    margin:0 0 12px;font-weight:600;
   }
-  .step-num{
-    width:18px;height:18px;border-radius:50%;background:var(--steel);color:#fff;
-    display:inline-flex;align-items:center;justify-content:center;font-size:0.68rem;
-    font-family:'IBM Plex Mono',monospace;flex-shrink:0;
-  }
-  .step-num.done{background:var(--success);}
-
-  .chip-row{display:flex;gap:8px;flex-wrap:wrap;}
-  .chip{
-    border:1px solid var(--line);background:var(--bg);color:var(--ink);
-    padding:9px 16px;border-radius:4px;cursor:pointer;font-family:inherit;
-    font-size:0.9rem;font-weight:500;transition:border-color .15s, background .15s;
-  }
-  .chip:hover{border-color:var(--steel);}
-  .chip.active{background:var(--steel);border-color:var(--steel);color:#fff;}
-
-  .month-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-  .month-input{
-    border:1px solid var(--line);border-radius:4px;padding:9px 12px;
-    font-family:inherit;font-size:0.9rem;background:var(--bg);color:var(--ink);
-    min-width:160px;
-  }
-  .month-input:focus{outline:2px solid var(--steel);outline-offset:1px;}
-  .add-btn{
-    border:1px dashed var(--steel);background:transparent;color:var(--steel-dark);
-    padding:9px 14px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:0.85rem;
-  }
-  .add-btn:hover{background:#eaf0f4;}
+  .empty-hint{color:var(--ink-soft);font-size:0.88rem;padding:6px 0 2px;}
 
   .camera-area{display:flex;flex-direction:column;gap:12px;align-items:center;}
   .preview{
-    width:100%;max-width:420px;aspect-ratio:4/3;border-radius:4px;
-    border:1px solid var(--line);background:var(--bg);
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    width:100%;max-width:420px;aspect-ratio:4/3;border-radius:4px;border:1px solid var(--line);
+    background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;
   }
   .preview img{width:100%;height:100%;object-fit:cover;}
   .preview .placeholder{color:var(--ink-soft);font-size:0.85rem;text-align:center;padding:0 20px;}
   input[type=file]{display:none;}
   .btn-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-  .btn{
-    font-family:inherit;font-size:0.9rem;font-weight:600;border-radius:5px;
-    padding:11px 20px;cursor:pointer;border:none;
-  }
+  .btn{font-family:inherit;font-size:0.9rem;font-weight:600;border-radius:5px;padding:11px 20px;cursor:pointer;border:none;}
   .btn-primary{background:var(--amber);color:#3A2A0A;}
   .btn-primary:hover{background:var(--amber-dark);}
   .btn-secondary{background:transparent;border:1px solid var(--line);color:var(--ink);}
   .btn-secondary:hover{border-color:var(--steel);}
   .btn:disabled{opacity:0.5;cursor:not-allowed;}
 
-  .status{font-size:0.85rem;margin-top:6px;min-height:1.2em;}
+  .status{font-size:0.85rem;margin-top:6px;min-height:1.2em;text-align:center;}
   .status.error{color:var(--error);}
   .status.success{color:var(--success);}
   .status.busy{color:var(--steel-dark);}
 
   .ocr-result{
-    margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;
-    border:1px solid var(--line);font-family:'IBM Plex Mono',monospace;
-    font-size:0.78rem;line-height:1.5;white-space:pre-wrap;max-height:160px;overflow:auto;
+    margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;border:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.5;white-space:pre-wrap;
+    max-height:160px;overflow:auto;
   }
 
   table{width:100%;border-collapse:collapse;font-size:0.82rem;}
   th{
-    text-align:left;color:var(--ink-soft);font-weight:600;text-transform:uppercase;
-    letter-spacing:0.04em;font-size:0.68rem;border-bottom:1px solid var(--line);
-    padding:6px 8px;
+    text-align:left;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;
+    font-size:0.68rem;border-bottom:1px solid var(--line);padding:6px 8px;
   }
   td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;}
   td.ocr-cell{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft);}
   td a{color:var(--steel-dark);}
-  .empty-log{color:var(--ink-soft);font-size:0.85rem;padding:8px 0;}
 
   .modal-backdrop{
-    position:fixed;inset:0;background:rgba(28,43,51,0.55);display:none;
-    align-items:center;justify-content:center;padding:20px;z-index:10;
+    position:fixed;inset:0;background:rgba(28,43,51,0.55);display:none;align-items:center;
+    justify-content:center;padding:20px;z-index:10;
   }
   .modal-backdrop.open{display:flex;}
-  .modal{
-    background:var(--surface);border-radius:6px;padding:22px;max-width:420px;width:100%;
-  }
+  .modal{background:var(--surface);border-radius:6px;padding:22px;max-width:420px;width:100%;}
   .modal h3{margin:0 0 10px;font-size:1rem;}
   .modal p{color:var(--ink-soft);font-size:0.82rem;line-height:1.5;margin:0 0 14px;}
   .modal input{
@@ -145,63 +129,55 @@
   <header>
     <div>
       <h1>Incoming Raw Material Records</h1>
-      <p>Photograph CoA and inspection documents — OCR text is logged straight to the spreadsheet.</p>
+      <p>Browse folders, photograph documents, OCR runs automatically.</p>
     </div>
     <button class="gear" id="settingsBtn">Settings</button>
   </header>
 
-  <section class="panel">
-    <h2><span class="step-num" id="num1">1</span> Material</h2>
-    <div class="chip-row" id="materialRow">
-      <button class="chip" data-value="Oil">Oil</button>
-      <button class="chip" data-value="Film">Film</button>
-      <button class="chip" data-value="Seasoning">Seasoning</button>
-    </div>
-  </section>
+  <nav class="crumbs" id="crumbs"></nav>
 
-  <section class="panel">
-    <h2><span class="step-num" id="num2">2</span> Document type</h2>
-    <div class="chip-row" id="docTypeRow">
-      <button class="chip" data-value="CoA">CoA</button>
-      <button class="chip" data-value="Inspection">Inspection</button>
-    </div>
-  </section>
+  <div id="screen-home">
+    <div class="folder-grid" id="materialGrid"></div>
+  </div>
 
-  <section class="panel">
-    <h2><span class="step-num" id="num3">3</span> Month folder</h2>
-    <div class="month-row" id="monthRow">
-      <button class="add-btn" id="addMonthBtn">+ New month</button>
-    </div>
-  </section>
+  <div id="screen-docType" style="display:none;">
+    <div class="folder-grid" id="docTypeGrid"></div>
+  </div>
 
-  <section class="panel">
-    <h2><span class="step-num" id="num4">4</span> Capture &amp; upload</h2>
-    <div class="camera-area">
-      <label class="preview" id="previewLabel" for="fileInput">
-        <span class="placeholder" id="previewPlaceholder">Tap "Take photo" to capture a document</span>
-        <img id="previewImg" style="display:none;">
-      </label>
-      <input type="file" id="fileInput" accept="image/*" capture="environment">
-      <div class="btn-row">
-        <button class="btn btn-secondary" id="retakeBtn" style="display:none;">Retake</button>
-        <button class="btn btn-primary" id="captureBtn">Take photo</button>
-        <button class="btn btn-primary" id="uploadBtn" style="display:none;">Upload &amp; run OCR</button>
+  <div id="screen-month" style="display:none;">
+    <div class="folder-grid" id="monthGrid"></div>
+  </div>
+
+  <div id="screen-capture" style="display:none;">
+    <section class="panel">
+      <h2>Capture &amp; upload</h2>
+      <div class="camera-area">
+        <label class="preview" id="previewLabel" for="fileInput">
+          <span class="placeholder" id="previewPlaceholder">Tap "Take photo" to capture a document</span>
+          <img id="previewImg" style="display:none;">
+        </label>
+        <input type="file" id="fileInput" accept="image/*" capture="environment">
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="retakeBtn" style="display:none;">Retake</button>
+          <button class="btn btn-primary" id="captureBtn">Take photo</button>
+          <button class="btn btn-primary" id="uploadBtn" style="display:none;">Upload &amp; run OCR</button>
+        </div>
+        <div class="status" id="statusMsg"></div>
+        <div class="ocr-result" id="ocrResult" style="display:none;"></div>
       </div>
-      <div class="status" id="statusMsg"></div>
-      <div class="ocr-result" id="ocrResult" style="display:none;"></div>
-    </div>
-  </section>
+    </section>
 
-  <section class="panel">
-    <h2>Recent captures <span id="logMaterialLabel" style="text-transform:none;letter-spacing:0;"></span></h2>
-    <div id="logArea"><div class="empty-log">Select a material to see its log.</div></div>
-  </section>
+    <section class="panel">
+      <h2>Recent captures in this folder</h2>
+      <div id="logArea"><div class="empty-hint">Loading…</div></div>
+    </section>
+  </div>
 </div>
 
 <div class="modal-backdrop" id="settingsModal">
   <div class="modal">
     <h3>Apps Script Web App URL</h3>
-    <p>Paste the deployment URL from your Apps Script Web App (Deploy → New deployment → Web app). Saved only in this browser.</p>
+    <p>Paste the deployment URL from your Apps Script Web App (Deploy → New deployment → Web app). Saved only in this browser — or set DEFAULT_WEBAPP_URL in the code to skip this.</p>
     <input type="text" id="webAppUrlInput" placeholder="https://script.google.com/macros/s/…/exec">
     <div class="btn-row">
       <button class="btn btn-secondary" id="settingsCancel">Cancel</button>
@@ -231,15 +207,20 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
 // =============================================
 
 (function(){
-  var state = { material:null, docType:null, month:null, months:[], imageDataUrl:null, imageBlobBase64:null, imageMime:null };
+  var MATERIALS = ['Oil', 'Film', 'Seasoning'];
+  var DOC_TYPES = ['CoA', 'Inspection'];
+
+  var state = { material:null, docType:null, month:null, imageDataUrl:null, imageBlobBase64:null, imageMime:null };
 
   function loadUrl(){ try{ return localStorage.getItem('irm_webapp_url') || DEFAULT_WEBAPP_URL || ''; }catch(e){ return DEFAULT_WEBAPP_URL || ''; } }
   function saveUrl(v){ try{ localStorage.setItem('irm_webapp_url', v); }catch(e){} }
-  function loadMonths(){ try{ return JSON.parse(localStorage.getItem('irm_months')||'[]'); }catch(e){ return []; } }
-  function saveMonths(list){ try{ localStorage.setItem('irm_months', JSON.stringify(list)); }catch(e){} }
+  function monthsKey(material, docType){ return 'irm_months_' + material + '_' + docType; }
+  function loadMonths(material, docType){ try{ return JSON.parse(localStorage.getItem(monthsKey(material,docType))||'[]'); }catch(e){ return []; } }
+  function saveMonths(material, docType, list){ try{ localStorage.setItem(monthsKey(material,docType), JSON.stringify(list)); }catch(e){} }
 
   var webAppUrl = loadUrl();
-  state.months = loadMonths();
+
+  var folderSvg = '<svg class="folder-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6.5C3 5.67157 3.67157 5 4.5 5H9.5L11.5 7H19.5C20.3284 7 21 7.67157 21 8.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 
   // ---- Settings modal ----
   var settingsModal = document.getElementById('settingsModal');
@@ -252,72 +233,120 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     webAppUrl = document.getElementById('webAppUrlInput').value.trim();
     saveUrl(webAppUrl);
     settingsModal.classList.remove('open');
-    if(!webAppUrl){ setStatus('No Web App URL saved yet — set it in Settings before uploading.', 'error'); }
-    else { setStatus('Web App URL saved.', 'success'); refreshLog(); }
+    if(state.material && state.docType && state.month){ refreshLog(); }
   };
 
-  // ---- Material / doc type chips ----
-  function wireChipRow(rowId, key, numId){
-    var row = document.getElementById(rowId);
-    row.querySelectorAll('.chip').forEach(function(btn){
-      btn.onclick = function(){
-        row.querySelectorAll('.chip').forEach(function(b){ b.classList.remove('active'); });
-        btn.classList.add('active');
-        state[key] = btn.dataset.value;
-        document.getElementById(numId).classList.add('done');
-        if(key==='material'){
-          renderMonths();
-          document.getElementById('logMaterialLabel').textContent = '— ' + state.material;
-          refreshLog();
-        }
-      };
-    });
+  // ---- Screen management ----
+  var screens = {
+    home: document.getElementById('screen-home'),
+    docType: document.getElementById('screen-docType'),
+    month: document.getElementById('screen-month'),
+    capture: document.getElementById('screen-capture')
+  };
+  function showScreen(name){
+    Object.keys(screens).forEach(function(k){ screens[k].style.display = (k===name) ? 'block' : 'none'; });
+    renderCrumbs();
   }
-  wireChipRow('materialRow','material','num1');
-  wireChipRow('docTypeRow','docType','num2');
 
-  // ---- Months ----
-  var monthRow = document.getElementById('monthRow');
-  var addMonthBtn = document.getElementById('addMonthBtn');
-  function renderMonths(){
-    Array.prototype.slice.call(monthRow.querySelectorAll('.chip')).forEach(function(el){ el.remove(); });
-    state.months.forEach(function(m){
+  function renderCrumbs(){
+    var el = document.getElementById('crumbs');
+    var parts = [{label:'Home', action:goHome}];
+    if(state.material) parts.push({label:state.material, action:openDocTypeScreen});
+    if(state.docType) parts.push({label:state.docType, action:openMonthScreen});
+    if(state.month) parts.push({label:state.month, action:null});
+    el.innerHTML = '';
+    parts.forEach(function(p, i){
+      if(i>0){
+        var sep = document.createElement('span');
+        sep.className = 'crumb-sep';
+        sep.textContent = '/';
+        el.appendChild(sep);
+      }
       var b = document.createElement('button');
-      b.className = 'chip';
-      b.textContent = m;
-      b.dataset.value = m;
-      if(m === state.month) b.classList.add('active');
-      b.onclick = function(){
-        monthRow.querySelectorAll('.chip').forEach(function(x){ x.classList.remove('active'); });
-        b.classList.add('active');
-        state.month = m;
-        document.getElementById('num3').classList.add('done');
-      };
-      monthRow.insertBefore(b, addMonthBtn);
+      b.className = 'crumb' + (p.action ? '' : ' current');
+      b.textContent = p.label;
+      if(p.action) b.onclick = p.action;
+      else b.disabled = true;
+      el.appendChild(b);
     });
   }
-  renderMonths();
 
+  // ---- Home: material folders ----
+  function renderMaterialGrid(){
+    var grid = document.getElementById('materialGrid');
+    grid.innerHTML = '';
+    MATERIALS.forEach(function(m){
+      var b = document.createElement('button');
+      b.className = 'folder-btn';
+      b.innerHTML = folderSvg + '<span class="label">' + m + '</span><span class="sub">CoA · Inspection</span>';
+      b.onclick = function(){ state.material = m; state.docType = null; state.month = null; openDocTypeScreen(); };
+      grid.appendChild(b);
+    });
+  }
+  function goHome(){ state.material=null; state.docType=null; state.month=null; showScreen('home'); }
+
+  // ---- Doc type folders ----
+  function openDocTypeScreen(){
+    var grid = document.getElementById('docTypeGrid');
+    grid.innerHTML = '';
+    DOC_TYPES.forEach(function(d){
+      var b = document.createElement('button');
+      b.className = 'folder-btn';
+      b.innerHTML = folderSvg + '<span class="label">' + d + '</span><span class="sub">' + state.material + '</span>';
+      b.onclick = function(){ state.docType = d; state.month = null; openMonthScreen(); };
+      grid.appendChild(b);
+    });
+    showScreen('docType');
+  }
+
+  // ---- Month folders ----
   var monthModal = document.getElementById('monthModal');
-  addMonthBtn.onclick = function(){
-    document.getElementById('newMonthInput').value = '';
-    monthModal.classList.add('open');
-  };
+  function openMonthScreen(){
+    renderMonthGrid();
+    showScreen('month');
+  }
+  function renderMonthGrid(){
+    var grid = document.getElementById('monthGrid');
+    grid.innerHTML = '';
+    var months = loadMonths(state.material, state.docType);
+    months.forEach(function(m){
+      var b = document.createElement('button');
+      b.className = 'folder-btn';
+      b.innerHTML = folderSvg + '<span class="label">' + m + '</span><span class="sub">' + state.material + ' · ' + state.docType + '</span>';
+      b.onclick = function(){ state.month = m; openCaptureScreen(); };
+      grid.appendChild(b);
+    });
+    var addBtn = document.createElement('button');
+    addBtn.className = 'folder-btn add';
+    addBtn.innerHTML = '<span class="label">+ New month</span>';
+    addBtn.onclick = function(){
+      document.getElementById('newMonthInput').value = '';
+      monthModal.classList.add('open');
+    };
+    grid.appendChild(addBtn);
+    if(!months.length){
+      var hint = document.createElement('div');
+      hint.className = 'empty-hint';
+      hint.style.gridColumn = '1/-1';
+      hint.textContent = 'No month folders yet — add one to get started.';
+      grid.insertBefore(hint, grid.firstChild);
+    }
+  }
   document.getElementById('monthCancel').onclick = function(){ monthModal.classList.remove('open'); };
   document.getElementById('monthSave').onclick = function(){
     var v = document.getElementById('newMonthInput').value.trim();
     if(!v) return;
-    if(state.months.indexOf(v) === -1){
-      state.months.push(v);
-      saveMonths(state.months);
+    var months = loadMonths(state.material, state.docType);
+    if(months.indexOf(v) === -1){
+      months.push(v);
+      saveMonths(state.material, state.docType, months);
     }
-    state.month = v;
-    renderMonths();
-    document.getElementById('num3').classList.add('done');
     monthModal.classList.remove('open');
+    state.month = v;
+    openCaptureScreen();
   };
 
-  // ---- Camera capture ----
+  // ---- Capture screen ----
   var fileInput = document.getElementById('fileInput');
   var previewImg = document.getElementById('previewImg');
   var previewPlaceholder = document.getElementById('previewPlaceholder');
@@ -325,6 +354,23 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
   var retakeBtn = document.getElementById('retakeBtn');
   var uploadBtn = document.getElementById('uploadBtn');
   var ocrResult = document.getElementById('ocrResult');
+
+  function openCaptureScreen(){
+    resetCapture();
+    showScreen('capture');
+    refreshLog();
+  }
+  function resetCapture(){
+    state.imageDataUrl = null; state.imageBlobBase64 = null;
+    previewImg.style.display = 'none';
+    previewPlaceholder.style.display = 'block';
+    captureBtn.style.display = 'inline-block';
+    retakeBtn.style.display = 'none';
+    uploadBtn.style.display = 'none';
+    ocrResult.style.display = 'none';
+    fileInput.value = '';
+    setStatus('', '');
+  }
 
   captureBtn.onclick = function(){ fileInput.click(); };
   fileInput.onchange = function(){
@@ -346,17 +392,7 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     };
     reader.readAsDataURL(file);
   };
-  retakeBtn.onclick = function(){
-    state.imageDataUrl = null; state.imageBlobBase64 = null;
-    previewImg.style.display = 'none';
-    previewPlaceholder.style.display = 'block';
-    captureBtn.style.display = 'inline-block';
-    retakeBtn.style.display = 'none';
-    uploadBtn.style.display = 'none';
-    ocrResult.style.display = 'none';
-    fileInput.value = '';
-    setStatus('', '');
-  };
+  retakeBtn.onclick = resetCapture;
 
   function setStatus(msg, kind){
     var el = document.getElementById('statusMsg');
@@ -366,9 +402,6 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
 
   uploadBtn.onclick = function(){
     if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings first.', 'error'); return; }
-    if(!state.material){ setStatus('Pick a material.', 'error'); return; }
-    if(!state.docType){ setStatus('Pick a document type.', 'error'); return; }
-    if(!state.month){ setStatus('Pick or add a month.', 'error'); return; }
     if(!state.imageBlobBase64){ setStatus('Take a photo first.', 'error'); return; }
 
     uploadBtn.disabled = true;
@@ -383,17 +416,15 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
       imageBase64: state.imageBlobBase64
     };
 
-    fetch(webAppUrl, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    }).then(function(r){ return r.json(); })
+    fetch(webAppUrl, { method: 'POST', body: JSON.stringify(payload) })
+      .then(function(r){ return r.json(); })
       .then(function(res){
         uploadBtn.disabled = false;
         if(!res.ok){ setStatus('Error: ' + res.error, 'error'); return; }
         setStatus('Saved and logged to the ' + state.material + ' sheet.', 'success');
         ocrResult.style.display = 'block';
         ocrResult.textContent = res.ocrText || '(no text recognized)';
-        retakeBtn.click();
+        resetCapture();
         refreshLog();
       })
       .catch(function(err){
@@ -402,23 +433,24 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
       });
   };
 
-  // ---- Log ----
+  // ---- Log (filtered to current material, shown for current month) ----
   function refreshLog(){
     var area = document.getElementById('logArea');
-    if(!webAppUrl || !state.material){
-      area.innerHTML = '<div class="empty-log">Select a material to see its log.</div>';
+    if(!webAppUrl){
+      area.innerHTML = '<div class="empty-hint">Set your Apps Script Web App URL in Settings to see the log.</div>';
       return;
     }
-    area.innerHTML = '<div class="empty-log">Loading…</div>';
+    area.innerHTML = '<div class="empty-hint">Loading…</div>';
     fetch(webAppUrl + '?material=' + encodeURIComponent(state.material))
       .then(function(r){ return r.json(); })
       .then(function(res){
-        if(!res.ok){ area.innerHTML = '<div class="empty-log">Could not load log: ' + res.error + '</div>'; return; }
-        if(!res.rows || !res.rows.length){ area.innerHTML = '<div class="empty-log">No captures logged yet for ' + state.material + '.</div>'; return; }
-        var html = '<table><thead><tr><th>Time</th><th>Doc</th><th>Month</th><th>File</th><th>OCR</th></tr></thead><tbody>';
-        res.rows.forEach(function(r){
+        if(!res.ok){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + res.error + '</div>'; return; }
+        var rows = (res.rows || []).filter(function(r){ return r.docType === state.docType && r.month === state.month; });
+        if(!rows.length){ area.innerHTML = '<div class="empty-hint">No captures logged yet in this folder.</div>'; return; }
+        var html = '<table><thead><tr><th>Time</th><th>File</th><th>OCR</th></tr></thead><tbody>';
+        rows.forEach(function(r){
           var t = r.timestamp ? new Date(r.timestamp).toLocaleString() : '';
-          html += '<tr><td>' + t + '</td><td>' + esc(r.docType) + '</td><td>' + esc(r.month) + '</td>' +
+          html += '<tr><td>' + t + '</td>' +
                   '<td><a href="' + esc(r.link) + '" target="_blank" rel="noopener">' + esc(r.fileName) + '</a></td>' +
                   '<td class="ocr-cell" title="' + esc(r.ocrText) + '">' + esc(r.ocrText) + '</td></tr>';
         });
@@ -426,7 +458,7 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
         area.innerHTML = html;
       })
       .catch(function(err){
-        area.innerHTML = '<div class="empty-log">Could not load log: ' + err.message + '</div>';
+        area.innerHTML = '<div class="empty-hint">Could not load log: ' + err.message + '</div>';
       });
   }
   function esc(s){
@@ -435,7 +467,8 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     });
   }
 
-  if(!webAppUrl){ setStatus('Set your Apps Script Web App URL in Settings to get started.', ''); }
+  renderMaterialGrid();
+  goHome();
 })();
 </script>
 </body>
