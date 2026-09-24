@@ -508,16 +508,18 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     showScreen('capture');
     refreshLog();
   }
-  function resetCapture(){
+  function resetCapture(keepResult){
     state.imageDataUrl=null; state.imageBlobBase64=null;
     previewImg.style.display='none';
     previewPlaceholder.style.display='block';
     captureBtn.style.display='inline-block';
     retakeBtn.style.display='none';
     uploadBtn.style.display='none';
-    ocrResult.style.display='none';
     fileInput.value='';
-    setStatus('', '');
+    if(!keepResult){
+      ocrResult.style.display='none';
+      setStatus('', '');
+    }
   }
   captureBtn.onclick = function(){ fileInput.click(); };
   fileInput.onchange = function(){
@@ -539,7 +541,7 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
     };
     reader.readAsDataURL(file);
   };
-  retakeBtn.onclick = resetCapture;
+  retakeBtn.onclick = function(){ resetCapture(); };
 
   function setStatus(msg, kind){
     var el = document.getElementById('statusMsg');
@@ -563,7 +565,7 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz981yOhRiQOqx
       setStatus('Saved and logged to the ' + state.material + ' sheet.', 'success');
       ocrResult.style.display='block';
       ocrResult.textContent = res.ocrText || '(no text recognized)';
-      resetCapture();
+      resetCapture(true);
       refreshLog();
     });
   };
