@@ -190,8 +190,9 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwU1tgalwu2huz
 
   var state = { material:null, docType:null, year:null, month:null, date:null, imageDataUrl:null, imageBlobBase64:null, imageMime:null };
 
-  function loadUrl(){ try{ return localStorage.getItem('irm_webapp_url') || DEFAULT_WEBAPP_URL || ''; }catch(e){ return DEFAULT_WEBAPP_URL || ''; } }
-  function saveUrl(v){ try{ localStorage.setItem('irm_webapp_url', v); }catch(e){} }
+  function cleanUrl(v){ return (v||'').trim().replace(/\/+$/, ''); }
+  function loadUrl(){ try{ return cleanUrl(localStorage.getItem('irm_webapp_url') || DEFAULT_WEBAPP_URL || ''); }catch(e){ return cleanUrl(DEFAULT_WEBAPP_URL || ''); } }
+  function saveUrl(v){ try{ localStorage.setItem('irm_webapp_url', cleanUrl(v)); }catch(e){} }
   var webAppUrl = loadUrl();
 
   // ---- generic localStorage list helpers ----
@@ -232,7 +233,7 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwU1tgalwu2huz
   };
   document.getElementById('settingsCancel').onclick = function(){ settingsModal.classList.remove('open'); };
   document.getElementById('settingsSave').onclick = function(){
-    webAppUrl = document.getElementById('webAppUrlInput').value.trim();
+    webAppUrl = cleanUrl(document.getElementById('webAppUrlInput').value);
     saveUrl(webAppUrl);
     settingsModal.classList.remove('open');
     if(state.material && state.docType && state.year && state.month && state.date){ refreshLog(); }
@@ -611,8 +612,11 @@ var DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwU1tgalwu2huz
     if(!webAppUrl){ area.innerHTML = '<div class="empty-hint">Set your Apps Script Web App URL in Settings to see the log.</div>'; return; }
     area.innerHTML = '<div class="empty-hint">Loading…</div>';
     fetch(webAppUrl + '?material=' + encodeURIComponent(state.material))
-      .then(function(r){ return r.json(); })
-      .then(function(res){
+      .then(function(r){ return r.text(); })
+      .then(function(text){
+        var res;
+        try{ res = JSON.parse(text); }
+        catch(e){ throw new Error('Server did not return JSON (check Web App "Who has access" is set to Anyone). Got: ' + text.slice(0,120)); }
         if(!res.ok){ area.innerHTML = '<div class="empty-hint">Could not load log: ' + esc(res.error) + '</div>'; return; }
         var rows = (res.rows || []).filter(function(r){
           return String(r.docType)===String(state.docType) && String(r.year)===String(state.year) &&
